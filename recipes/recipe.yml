@@ -1,0 +1,56 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+
+name: server-os
+description: OS for my homelab and VPS's as I need them
+
+base-image: ghcr.io/ublue-os/ucore
+image-version: stable
+
+modules:
+  - type: dnf
+    repos:
+      files:
+        - terra.repo
+    install:
+      install-weak-deps: false
+      packages:
+        - git
+        - zsh
+        - zsh-autosuggestions
+        - zoxide
+        - eza
+        - bat
+        - yazi
+        - wget
+        - screen
+        - mise
+        - btop
+        - htop
+        - ncdu
+        - nmap
+        - iftop
+        - arp-scan
+        - fastfetch
+        - speedtest-cli
+        - avahi
+        - avahi-tools
+        - nss-mdns
+
+  - type: script
+    scripts:
+      - skel.sh
+      - zsh-plugins.sh
+      - mdns-firewall.sh
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: systemd
+    system:
+      enabled:
+        - avahi-daemon.service
+
+  - type: signing
